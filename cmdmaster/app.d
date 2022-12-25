@@ -129,19 +129,21 @@ private void thread1()
 {
 
     master.run();
-    
+
 }
+
 immutable string index;
 immutable string semanticjs;
 immutable string semanticcss;
 immutable string jquery;
-shared  static this()
+shared static this()
 {
-    index=import("index.html");
-    semanticcss=import("semantic.min.css");
-    semanticjs=import("semantic.min.js");
-    jquery=import("jquery.min.js");
+    index = import("index.html");
+    semanticcss = import("semantic.min.css");
+    semanticjs = import("semantic.min.js");
+    jquery = import("jquery.min.js");
 }
+
 int main(string[] args)
 {
     string redishost = "localhost";
@@ -160,12 +162,24 @@ int main(string[] args)
     auto settings = new HTTPServerSettings;
     settings.port = dport;
     settings.bindAddresses = ["0.0.0.0"];
-    auto router=new URLRouter;
-    router.get("/",(req,resp) {resp.contentType="text/html";resp.writeBody(index);});
-    router.get("/semantic.min.css",(req,resp) {resp.contentType="text/css";resp.writeBody(semanticcss);});
-    router.get("/semantic.min.js",(req,resp) {resp.contentType="text/javascript";resp.writeBody(semanticjs);});
-    router.get("/jquery.min.js",(req,resp) { resp.contentType="text/javascript"; resp.writeBody(jquery);});
-    router.get("/ws",handleWebSockets(&websockethandler));
+    auto router = new URLRouter;
+    router.get("/", (req, resp) {
+        resp.contentType = "text/html";
+        resp.writeBody(index);
+    });
+    router.get("/semantic.min.css", (req, resp) {
+        resp.contentType = "text/css";
+        resp.writeBody(semanticcss);
+    });
+    router.get("/semantic.min.js", (req, resp) {
+        resp.contentType = "text/javascript";
+        resp.writeBody(semanticjs);
+    });
+    router.get("/jquery.min.js", (req, resp) {
+        resp.contentType = "text/javascript";
+        resp.writeBody(jquery);
+    });
+    router.get("/ws", handleWebSockets(&websockethandler));
     auto listener = listenHTTP(settings, router);
     scope (exit)
     {
