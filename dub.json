@@ -1,0 +1,44 @@
+{
+	"authors": [
+		"root"
+	],
+	"configurations": [
+		{
+			"importPaths": [
+				"common"
+			],
+			"name": "default",
+			"sourcePaths": [
+				"common",
+				"source"
+			],
+			"targetName": "cmdagent",
+			"targetType": "executable"
+		},
+		{
+			"name": "cmdmaster",
+			"sourcePaths": [
+				"cmdmaster",
+				"common"
+			],
+			"targetName": "cmdmaster",
+			"targetType": "executable"
+		}
+	],
+	"copyright": "Copyright © 2022, root",
+	"dependencies": {
+		"tinyredis": "~>2.3.2",
+		"vibe-d": "~>0.9.5"
+	},
+	"description": "A minimal D application.",
+	"dflags": [
+		"-vtls",
+		"-J importdir"
+	],
+	"versions": [VibeDisableCommandLineParsing],
+	"license": "proprietary",
+	"name": "tt",
+	"sourcePaths": [],
+	"targetPath": "bin",
+	"targetType": "executable"
+}

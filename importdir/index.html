@@ -1,0 +1,75 @@
+<html>
+    <head>
+        <title>semantic-ui</title>
+        <link rel="stylesheet" type="text/css" href="/semantic.min.css">
+        <script src="/jquery.min.js"></script>
+        <script src="/semantic.min.js"></script>
+    </head>
+    <body>
+       <div class="ui container center">
+           <h3 class="big center header green">WebSocket</h3>
+           <div class="ui form">
+               <div class="field">
+                   <label>Receive:</label>
+                    <div style="background-color:black; color:green;height:600px;overflow: scroll;" id="msgs" class="ui large text" ></div>
+                  
+
+                </div>
+                <div class="field inline">
+                    <label>Target:</label>
+                    <div class="ui dropdown">
+                        <div class="text"></div>
+                        <i class="dropdown icon"></i>
+                      </div>
+                      <button class="ui button primary" onclick="update();">update</button>
+                    <label>Text</label>
+                    <input class="ui big" type="text" id="msg" cols="20" placeholder="msg text">
+                    <button class="ui button primary" onclick="sendmsg();">Submit</button>
+                </div>
+            
+           </div>
+       </div>
+      
+       <script>
+           var ws;
+           var lastcmd;
+           $(window).ready( function() {
+             //   $("#msgs").val("");
+             $('.ui.accordion')
+                .accordion();
+                $("#msg").keyup(function(event) { if(event.which==13) sendmsg(); });
+                 ws=new WebSocket("ws://"+location.host+"/ws");
+                ws.onmessage=function (event) {
+                //    $("#msgs").val(function(i,text) {return text+"\n"+event.data;});
+                    console.log(event.data);
+                    sdata=JSON.parse(event.data);
+                    if(sdata["type"]=="members")
+                    {
+                        vv=sdata["members"].map( (e) => {return {name:e,value:e}});
+                        vv.unshift({name:"all",value:"all",selected:true});
+                        console.log(vv);
+                        $('.ui.dropdown')
+                        .dropdown({
+                            values:vv
+                        });
+                    }
+                    else {
+                        $("#msgs").append("<div class='ui red raised'>"+lastcmd+"</div><div class='ui divider blue big'></div>"+sdata.hostname+":<pre>"+sdata.result+"</pre><br>");
+                        $("#msgs").scrollTop($("#msgs")[0].scrollHeight);
+                    }
+                    //console.log(event.data);
+                };
+                console.log("ok");
+
+           });
+           function update(){
+                 ws.send("/list");
+           }
+           function sendmsg(){
+                 ws.send("/send "+$('.ui.dropdown').dropdown("get value")+" "+$("#msg").val());
+                 lastcmd=$("#msg").val();
+                 $("#msg").val("");
+           }
+       </script>
+    </body>
+</html>
